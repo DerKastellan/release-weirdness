@@ -3,7 +3,7 @@ defmodule Sample do
 
   def start(_type, _args) do
     IO.puts "#{inspect File.cwd}"
-    port = Port.open({:spawn, "/var/fpwork/demsuw61/sample/test.esh"}, [:use_stdio, :binary, packet: 2])
+    port = Port.open({:spawn, "./test.esh"}, [:use_stdio, :binary, packet: 2])
 
     command = {:hello, :world} |> :erlang.term_to_binary
 

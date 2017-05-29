@@ -1,0 +1,37 @@
+#!/usr/bin/env escript
+%%
+%%
+
+main(_args) ->
+    io:format(standard_error, "Started~n", []),
+    loop().
+
+loop() ->
+    Length  = read_len(),
+    Command = read_command(Length),
+    log(Command),
+    case Command of
+        eof  -> ok;
+        _any -> exec_command(Command),
+                loop()
+    end.
+
+log(Data) -> io:format(standard_error, "Got '~p'~n", [Data]).
+
+read_len() ->
+    Input = io:get_chars(standard_io, "", 2),
+    case Input of
+        eof  -> eof;
+        _any -> << Length:16 >> = iolist_to_binary(Input),
+                Length
+    end.
+
+read_command(Length) ->
+    Command = io:get_chars(standard_io, "", Length),
+    case Command of
+        eof  -> eof;
+        _any -> binary_to_term(iolist_to_binary(Command))
+    end.
+
+exec_command(Command) ->
+    io:format(standard_error, "Command was ~p~n", [Command]).
